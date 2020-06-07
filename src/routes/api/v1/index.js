@@ -5,7 +5,7 @@ import users from './user';
 const router = express.Router();
 
 router.use('/titles', titles);
-router.use('/users', users);
+router.use('/auth/users', users);
 
 
 export default router;

@@ -7,12 +7,16 @@ import userValidator from './validators/userValidator';
 const router = express.Router();
 
 router
-  .route('/')
-  .get(asyncHandler(UserController.getAll))
-  .post(
-    celebrate({ body: userValidator.createUser }),
-    asyncHandler(UserController.create),
-  );
+  
+  .post('/signup',
+    celebrate({ body: userValidator.signUpUser }),
+    asyncHandler(UserController.signup)
+  )
+  .post('/signin',
+    celebrate({ body: userValidator.signInUser }),
+    asyncHandler(UserController.signin)
+    )
+ 
 
 
 export default router;
