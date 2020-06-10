@@ -30,7 +30,7 @@ export default class TitleController {
   }
 
   /**
-   * Get all the users
+   * Get all the titles
    *
    * @author Agbolade Adeniyi
    * @static
@@ -48,8 +48,8 @@ export default class TitleController {
     });
   }
 
-  /**
-   * Search for title
+    /**
+   * Search for a title in the database
    *
    * @author Agbolade Adeniyi
    * @static
@@ -59,15 +59,15 @@ export default class TitleController {
    * @memberof TitleController
    */
   static async searchTitle(req, res) {
-    
-    
+    const { param } = req.query 
     const title = await Title.find({
-      name: req.query
+      title: param
     });
-
     return res.status(statusCodes.OK).json({
       status: 'success',
-      title,
+      title
     });
   }
+
+
 }
