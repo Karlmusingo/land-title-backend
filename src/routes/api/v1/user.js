@@ -4,6 +4,7 @@ import { UserController } from '../../../controllers';
 import { asyncHandler } from '../../../middlewares';
 import userValidator from './validators/userValidator';
 
+
 const router = express.Router();
 
 router
