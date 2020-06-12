@@ -63,6 +63,12 @@ export default class TitleController {
     const title = await Title.find({
       title: param
     });
+    
+    if (title.length === 0) {
+      return res.status(404).json({
+        message: 'TItle not found'
+      });
+    }
     return res.status(statusCodes.OK).json({
       status: 'success',
       title

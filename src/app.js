@@ -27,6 +27,10 @@ app.use(morgan(isProd ? 'combined' : 'dev'));
 app.use(routes);
 app.use(joiErrors());
 
+app.use('/', (req, res) => {
+  return res.send('Welcome to Land title Api')
+})
+
 if (isProd) {
   app.use((req, res) => {
     const status = 404;
