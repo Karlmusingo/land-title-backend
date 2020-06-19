@@ -5,6 +5,10 @@ const titleSchema = new Schema({
     type: String,
     required: true,
   },
+  owner: {
+    type: String,
+    required: true,
+  },
   mortgage: {
     type: String,
     required: true,

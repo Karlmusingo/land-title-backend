@@ -1,4 +1,4 @@
-import { Title } from '../models';
+import { Title, Transactions } from '../models';
 import { statusCodes } from '../constants';
 
 /**
@@ -17,15 +17,19 @@ export default class TitleController {
    * @memberof TitleController
    */
   static async create(req, res) {
-    const { title, squareMeter, mortgage, address } = req.body;
+    const { title, owner, squareMeter, mortgage, address } = req.body;
 
     const newTitle = await Title.create({
-      title, squareMeter, mortgage, address
+      title,
+      owner,
+      squareMeter,
+      mortgage,
+      address,
     });
 
     return res.status(statusCodes.CREATED).json({
       status: 'success',
-      data: newTitle
+      data: newTitle,
     });
   }
 
@@ -34,9 +38,9 @@ export default class TitleController {
    *
    * @author Agbolade Adeniyi
    * @static
-   * @param {*} req
-   * @param {*} res
-   * @returns {array} 
+   * @param {*} req the request param
+   * @param {*} res the response param
+   * @returns {array} the return response
    * @memberof TitleController
    */
   static async getAll(req, res) {
@@ -48,32 +52,99 @@ export default class TitleController {
     });
   }
 
-    /**
+  /**
    * Search for a title in the database
    *
    * @author Agbolade Adeniyi
    * @static
-   * @param {*} req
-   * @param {*} res
-   * @returns {array} 
+   * @param {*} req the request param
+   * @param {*} res the response param
+   * @returns {array} the return response
    * @memberof TitleController
    */
   static async searchTitle(req, res) {
-    const { param } = req.query 
+    const { param } = req.query;
     const title = await Title.find({
-      title: param
+      title: param,
     });
-    
+
     if (title.length === 0) {
       return res.status(404).json({
-        message: 'TItle not found'
+        message: 'Title not found',
       });
     }
     return res.status(statusCodes.OK).json({
       status: 'success',
-      title
+      title,
     });
   }
 
+  /**
+   * Search for a title in the database
+   *
+   * @author Agbolade Adeniyi
+   * @static
+   * @param {*} req the request param
+   * @param {*} res the response param
+   * @returns {array} the return response
+   * @memberof TitleController
+   */
+  static async createTransaction(req, res) {
+    const { id } = req.params;
+    const title = await Title.find({
+      _id: id,
+    });
 
+    if (title.length === 0) {
+      return res.status(404).json({
+        message: 'Title not found',
+      });
+    }
+
+    const { newOwner, cost } = req.body;
+
+    const newTitle = await Transactions.create({
+      cost,
+      oldOwner: title.owner,
+      title: title._id,
+    });
+
+    title.updateOne({
+      owner: newOwner,
+    });
+
+    return res.status(statusCodes.CREATED).json({
+      status: 'success',
+      data: newTitle,
+    });
+  }
+
+  /**
+   * Get all the titles
+   *
+   * @author Agbolade Adeniyi
+   * @static
+   * @param {*} req the request param
+   * @param {*} res the response param
+   * @returns {array} the return response
+   * @memberof TitleController
+   */
+  static async getAllTransactions(req, res) {
+    const { id } = req.params;
+    const title = await Title.find({
+      _id: id,
+    });
+
+    if (title.length === 0) {
+      return res.status(404).json({
+        message: 'Title not found',
+      });
+    }
+    const transactions = await Transactions.find({ title: title._id });
+
+    return res.status(statusCodes.OK).json({
+      status: 'success',
+      transactions,
+    });
+  }
 }
